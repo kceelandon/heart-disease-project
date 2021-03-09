@@ -18,10 +18,9 @@ def perform_data_filtering_q2(data):
     return df
 
 def q2_plot(data):
-    sns.relplot(data=data, x='age', y='trestbps', col='num', hue='sex')
-    plt.xlabel('Age')
-    plt.ylabel('Resting Blood Pressure (mm Hg)')
-    plt.title('Blood Pressure vs. Age separated by presence of Disease')
+    p = sns.relplot(data=data, x='age', y='trestbps', col='num', hue='sex')
+    p.set_xlabels('Age')
+    p.set_ylabels('Resting Blood Pressure (mmHg)')
     plt.savefig('bpvsage.png', bbox_inches='tight')
 
 def main():
