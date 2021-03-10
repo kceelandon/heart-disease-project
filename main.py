@@ -29,9 +29,19 @@ def q1_name_later(data):
     features_train, features_test, labels_train, labels_test = \
     train_test_split(features, labels, test_size=0.3)
 
-    selector = SelectKBest(chi2, k=5).fit_transform(features_train, labels_train)
+    selector = SelectKBest(chi2, k=5).fit_transform(features, labels)
     print(selector[:5])
-    print(features_train.head())
+    print(features.head())
+    first_row = selector[0]
+    col_names = list(features.columns)
+    # matching the result of K best features to column names to identify best features
+    print('The best features to predict heart disease presence are:')
+    for f in first_row:
+        col = 0
+        for val in features.iloc[0]:
+            if val == f:
+                print(col_names[col])
+            col += 1
 
     # predicting the accuracy scores
     '''
@@ -62,7 +72,7 @@ def q2_plot(data):
 def main():
     data = pd.read_csv('cleveland.csv')
     q1_df = perform_data_filtering_q1(data)
-    print(q1_name_later(q1_df))
+    q1_name_later(q1_df)
     q2_df = perform_data_filtering_q2(data)
     #q2_plot(q2_df)
 
