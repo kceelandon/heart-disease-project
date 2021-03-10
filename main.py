@@ -30,12 +30,8 @@ def q1_name_later(data):
     features_train, features_test, labels_train, labels_test = \
     train_test_split(features, labels, test_size=0.3)
 
-    iris = load_iris()
-    X = pd.DataFrame(iris.data, columns=iris.features)
-    y = pd.DataFrame(iris.labels)
-
-    selector = SelectKBest(chi2, k=5).fit_transform(X, y)
-    select_feature_names = X.columns[selector.get_support()]
+    selector = SelectKBest(chi2, k=5).fit_transform(features, labels)
+    select_feature_names = features.columns[selector.get_support()]
     print(select_feature_names)
 
     '''
@@ -71,7 +67,7 @@ def main():
     q1_df = perform_data_filtering_q1(data)
     print(q1_name_later(q1_df))
     q2_df = perform_data_filtering_q2(data)
-    q2_plot(q2_df)
+    #q2_plot(q2_df)
 
 
 if __name__ == '__main__':
