@@ -6,6 +6,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.metrics import accuracy_score
+from IPython.display import Image, display
+import graphviz
+from sklearn.tree import export_graphviz
+
 
 sns.set()
 
@@ -20,6 +24,20 @@ def perform_data_filtering_q1(data):
     return df
 
 
+def plot_tree(model, features, labels):
+
+    dot_data = export_graphviz(model, out_file=None,
+                               feature_names=features.columns,
+                               class_names=labels.unique(),
+                               impurity=False,
+                               filled=True, rounded=True,
+                               special_characters=True)
+    graphviz.Source(dot_data).render('tree.gv', format='png')
+    display(Image(filename='/home/tree.gv.png'))
+
+    plot_tree(model, features, labels)
+
+
 def q1_name_later(data):
 
     # selecting the best features using K best features
@@ -27,7 +45,6 @@ def q1_name_later(data):
     labels = data['num']
 
     selector = SelectKBest(chi2, k=5).fit_transform(candidates, labels)
-    print(selector[:5])
     first_row = selector[0]
     col_names = list(candidates.columns)
     feature_names = []
@@ -40,19 +57,21 @@ def q1_name_later(data):
             if val == f:
                 feature_names.append(col_names[col])
             col += 1
-   
-    # making a model
+
+    # making and training a model
 
     features = data.loc[:, feature_names]
 
     features_train, features_test, labels_train, labels_test = \
         train_test_split(features, labels, test_size=0.3)
 
-    # predicting the accuracy scores
-
     model = DecisionTreeClassifier()
     model = model.fit(features_train, labels_train)
-    
+
+    plot_tree(model, features, labels)
+
+    # predicting the accuracy scores
+
     train_prediction = model.predict(features_train)
     train_acc = accuracy_score(labels_train, train_prediction)
     test_prediction = model.predict(features_test)
@@ -77,12 +96,13 @@ def q2_plot(data):
     p.set_ylabels('Resting Blood Pressure (mmHg)')
     plt.savefig('bpvsage.png', bbox_inches='tight')
 
+
 def main():
     data = pd.read_csv('cleveland.csv')
     q1_df = perform_data_filtering_q1(data)
     print(q1_name_later(q1_df))
-    q2_df = perform_data_filtering_q2(data)
-    #q2_plot(q2_df)
+    # q2_df = perform_data_filtering_q2(data)
+    # q2_plot(q2_df)
 
 
 if __name__ == '__main__':
