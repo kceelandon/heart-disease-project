@@ -4,6 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.metrics import accuracy_score
 from IPython.display import Image, display
@@ -25,17 +26,16 @@ def perform_data_filtering_q1(data):
 
 
 def plot_tree(model, features, labels):
+    features = list(features.columns)
 
-    dot_data = export_graphviz(model, out_file=None,
-                               feature_names=features.columns,
-                               class_names=labels.unique(),
+    dot_data = tree.export_graphviz(model, out_file=None,
+                               feature_names=features,
+                               class_names=True,
                                impurity=False,
                                filled=True, rounded=True,
                                special_characters=True)
     graphviz.Source(dot_data).render('tree.gv', format='png')
-    display(Image(filename='/home/tree.gv.png'))
-
-    plot_tree(model, features, labels)
+    display(Image(filename='tree.gv.png'))
 
 
 def q1_name_later(data):
@@ -101,8 +101,8 @@ def main():
     data = pd.read_csv('cleveland.csv')
     q1_df = perform_data_filtering_q1(data)
     print(q1_name_later(q1_df))
-    # q2_df = perform_data_filtering_q2(data)
-    # q2_plot(q2_df)
+    q2_df = perform_data_filtering_q2(data)
+    q2_plot(q2_df)
 
 
 if __name__ == '__main__':
