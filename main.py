@@ -8,8 +8,8 @@ from sklearn import tree
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.metrics import accuracy_score
 from IPython.display import Image, display
-import graphviz
 from sklearn.tree import export_graphviz
+import graphviz
 
 
 sns.set()
@@ -67,7 +67,12 @@ def q1_name_later(data):
 
     model = DecisionTreeClassifier()
     model = model.fit(features_train, labels_train)
-
+    importances = model.feature_importances_
+    print("Feature importances: ", importances)
+    indices = np.argsort(importances)
+    plt.bar(np.array(feature_names)[indices], importances)
+    plt.legend()
+    plt.show()
     plot_tree(model, features, labels)
 
     # predicting the accuracy scores
