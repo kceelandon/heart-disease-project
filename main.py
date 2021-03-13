@@ -8,8 +8,8 @@ from sklearn import tree
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.metrics import accuracy_score
 from IPython.display import Image, display
-from sklearn.tree import export_graphviz
 import graphviz
+from sklearn.tree import export_graphviz
 
 
 sns.set()
@@ -84,10 +84,11 @@ def q1_model(data):
     candidates = data.loc[:, data.columns != 'num']
     labels = data['num']
     feature_names = q1_best_features(candidates, labels)
+    print(feature_names)
     features = data.loc[:, feature_names]
 
     features_train, features_test, labels_train, labels_test = \
-        train_test_split(features, labels, test_size=0.3)
+        train_test_split(features, labels, test_size=0.33, random_state=4)
 
     model = DecisionTreeClassifier()
     model = model.fit(features_train, labels_train)
@@ -95,13 +96,15 @@ def q1_model(data):
     # plots most significant features of the model
     # plots model's DecisionTree
     importances = model.feature_importances_
+    print(importances)
     indices = np.argsort(importances)
 
     plt.bar(np.array(feature_names)[indices], importances)
     plt.xlabel("Features")
     plt.ylabel("Importance Score")
     plt.title("The Importance Scores of the Model's Features")
-    plt.savefig("importance.png")
+    plt.show()
+    #plt.savefig("importance.png")
     plot_tree(model, features, labels)
 
     # predicting the accuracy scores
