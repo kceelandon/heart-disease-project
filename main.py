@@ -16,7 +16,10 @@ sns.set()
 
 
 def perform_data_filtering_q1(data):
-    # redoing the dataframe columns based on different values
+    """
+    Takes the original DataFrame.
+    Returns the altered DataFrame necessary for Q1.
+    """
     df = data
     df = df.replace('?', np.NaN)
     df = df.dropna()
@@ -26,31 +29,37 @@ def perform_data_filtering_q1(data):
 
 
 def plot_tree(model, features, labels):
+    """
+    Takes model, features, and labels created for ML.
+    Creates a DecisionTree of the model and saves it.
+    """
     features = list(features.columns)
 
     dot_data = tree.export_graphviz(model, out_file=None,
-                               feature_names=features,
-                               class_names=True,
-                               impurity=False,
-                               filled=True, rounded=True,
-                               special_characters=True)
+                                    feature_names=features,
+                                    class_names=True,
+                                    impurity=False,
+                                    filled=True, rounded=True,
+                                    special_characters=True)
     graphviz.Source(dot_data).render('tree.gv', format='png')
     display(Image(filename='tree.gv.png'))
 
 
-def q1_name_later(data):
-
+def q1_best_features(candidates, labels):
+    """
+    Takes a data frame including potential feature
+    column candidates.
+    Returns a list of most signficant features based
+    on a Chi squared test.
+    """
     # selecting the best features using K best features
-    candidates = data.loc[:, data.columns != 'num']
-    labels = data['num']
-
+    # setting up for loop
     selector = SelectKBest(chi2, k=5).fit_transform(candidates, labels)
     first_row = selector[0]
     col_names = list(candidates.columns)
     feature_names = []
 
-    # matching the result of K best features to column names to identify best features
-    print('The best features to predict heart disease presence are:')
+    # matching the result of SelectKBest to column names to identify best features
     for f in first_row:
         col = 0
         for val in candidates.iloc[0]:
@@ -58,8 +67,17 @@ def q1_name_later(data):
                 feature_names.append(col_names[col])
             col += 1
 
-    # making and training a model
+    return feature_names
 
+
+def q1_name_later(data):
+    """
+    """
+    # making and training a model
+    candidates = data.loc[:, data.columns != 'num']
+    labels = data['num']
+
+    feature_names = q1_best_features(candidates, labels)
     features = data.loc[:, feature_names]
 
     features_train, features_test, labels_train, labels_test = \
@@ -67,16 +85,20 @@ def q1_name_later(data):
 
     model = DecisionTreeClassifier()
     model = model.fit(features_train, labels_train)
+
+    # plots most significant features of the model
+    # plots model's DecisionTree
     importances = model.feature_importances_
-    print("Feature importances: ", importances)
     indices = np.argsort(importances)
+
     plt.bar(np.array(feature_names)[indices], importances)
-    plt.legend()
-    plt.show()
+    plt.xlabel("Features")
+    plt.ylabel("Importance Score")
+    plt.title("The Importance Scores of the Model's Features")
+    plt.savefig("importance.png")
     plot_tree(model, features, labels)
 
     # predicting the accuracy scores
-
     train_prediction = model.predict(features_train)
     train_acc = accuracy_score(labels_train, train_prediction)
     test_prediction = model.predict(features_test)
