@@ -70,13 +70,19 @@ def q1_best_features(candidates, labels):
     return feature_names
 
 
-def q1_name_later(data):
+def q1_model(data):
     """
+    Takes altered DataFrame.
+    Makes and trains a Machine Learning Model
+    based on the best features.
+
+    Plots a bar graph of important features and
+    plots DecisionTree.
+    Returns both plots and the accuracy scores of the model.
     """
     # making and training a model
     candidates = data.loc[:, data.columns != 'num']
     labels = data['num']
-
     feature_names = q1_best_features(candidates, labels)
     features = data.loc[:, feature_names]
 
@@ -127,7 +133,7 @@ def q2_plot(data):
 def main():
     data = pd.read_csv('cleveland.csv')
     q1_df = perform_data_filtering_q1(data)
-    print(q1_name_later(q1_df))
+    q1_model(q1_df)
     q2_df = perform_data_filtering_q2(data)
     q2_plot(q2_df)
 
