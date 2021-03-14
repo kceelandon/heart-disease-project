@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import plotly.express as px
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
@@ -10,7 +11,6 @@ from sklearn.metrics import accuracy_score
 from IPython.display import Image, display
 import graphviz
 from sklearn.tree import export_graphviz
-
 
 sns.set()
 
@@ -133,12 +133,28 @@ def q2_plot(data):
     plt.savefig('bpvsage.png', bbox_inches='tight')
 
 
+def perform_data_filtering_q3(data):
+    df = data
+    angina_presence = df['cp'] <= 2
+    df['cp'] = np.where(angina_presence, 1, 0)
+    return df
+
+
+def q3(data):
+    ''' what do we want to do here? getting angina presence
+        based on factors is a classifier problem but
+        it sounds like we wanna do linear regression
+        using plotly?'''
+
+
 def main():
     data = pd.read_csv('cleveland.csv')
     q1_df = perform_data_filtering_q1(data)
     q1_model(q1_df)
     q2_df = perform_data_filtering_q2(data)
     q2_plot(q2_df)
+    q3_df = perform_data_filtering_q3(data)
+    q3(q3_df)
 
 
 if __name__ == '__main__':
