@@ -1,5 +1,5 @@
-# heart-disease-project
+# Heart Disease Analysis
 
 ### Python machine learning project on heart disease.
 
-### update this
+### Analysis to be posted soon.
