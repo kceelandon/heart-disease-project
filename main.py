@@ -144,11 +144,20 @@ def q3(data):
         using plotly?'''
 
     correlations = data.corr().abs()
+    print(correlations)
+    correlations_no_exang = correlations.drop(['exang'])
+    print(correlations_no_exang)
     # for resting angina
-    fig = px.bar(correlations, x=, y='cp')
-    fig.show
+    cols = ['age', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'oldpeak', 'slope']
+    correlations_no_exang['names'] = cols
+    fig = px.bar(correlations_no_exang, x='names', y='cp')
+    fig.show()
     # for exercise induced angina
-    exercise_corr = correlations.loc[['exang']].abs()
+    exercise_corr = correlations.drop(['cp'])
+    col_names = ['age', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope']
+    exercise_corr['names'] = col_names
+    new_fig = px.bar(exercise_corr, x='names', y='exang')
+    new_fig.show()
     print(rest_corr)
     print(exercise_corr)
 
