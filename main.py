@@ -84,7 +84,6 @@ def q1_model(data):
     candidates = data.loc[:, data.columns != 'num']
     labels = data['num']
     feature_names = q1_best_features(candidates, labels)
-    print(feature_names)
     features = data.loc[:, feature_names]
 
     features_train, features_test, labels_train, labels_test = \
@@ -96,15 +95,13 @@ def q1_model(data):
     # plots most significant features of the model
     # plots model's DecisionTree
     importances = model.feature_importances_
-    print(importances)
     indices = np.argsort(importances)
 
     plt.bar(np.array(feature_names)[indices], importances)
     plt.xlabel("Features")
     plt.ylabel("Importance Score")
     plt.title("The Importance Scores of the Model's Features")
-    plt.show()
-    #plt.savefig("importance.png")
+    plt.savefig("importance.png")
     plot_tree(model, features, labels)
 
     # predicting the accuracy scores
@@ -127,16 +124,16 @@ def perform_data_filtering_q2(data):
 
 
 def q2_plot(data):
-    p = sns.relplot(data=data, x='age', y='trestbps', col='num', hue='sex')
-    p.set_xlabels('Age')
-    p.set_ylabels('Resting Blood Pressure (mmHg)')
-    plt.savefig('bpvsage.png', bbox_inches='tight')
+
+    fig = px.scatter(data, x='age', y='trestbps', facet_col='num', color="sex", trendline="ols")
+    #fig.show()
 
 
 def perform_data_filtering_q3(data):
     df = data
     angina_presence = df['cp'] <= 2
     df['cp'] = np.where(angina_presence, 1, 0)
+    
     return df
 
 
@@ -146,6 +143,15 @@ def q3(data):
         it sounds like we wanna do linear regression
         using plotly?'''
 
+    correlations = data.corr().abs()
+    # for resting angina
+    fig = px.bar(correlations, x=, y='cp')
+    fig.show
+    # for exercise induced angina
+    exercise_corr = correlations.loc[['exang']].abs()
+    print(rest_corr)
+    print(exercise_corr)
+
 
 def main():
     data = pd.read_csv('cleveland.csv')
@@ -154,7 +160,7 @@ def main():
     q2_df = perform_data_filtering_q2(data)
     q2_plot(q2_df)
     q3_df = perform_data_filtering_q3(data)
-    q3(q3_df)
+    print(q3(q3_df))
 
 
 if __name__ == '__main__':
