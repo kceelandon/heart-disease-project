@@ -1,3 +1,19 @@
+''' Abigail Chutnik and Kcee Landon
+    CSE 163
+    Implements functions for
+    1. Creating a Machine Learning Model that
+    predicts if there is a presence of heart disease
+    based on a Chi squared selection of best features.
+    Saves a DecisionTree plot and plot of its most imporant
+    features
+    2. Creating a scatter linear regression plot using a new library
+    called Plotly to test with. The plot shows relationships between
+    resting blood pressure, age, and sex.
+    3. Creating two bar graphs using a new library called Plotly to test
+    with. The plots show the correlation coefficients of each heart disease
+    attribute with resting angina and exercise-induced angina.
+    '''
+
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -10,7 +26,6 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.metrics import accuracy_score
 from IPython.display import Image, display
 import graphviz
-from sklearn.tree import export_graphviz
 
 sns.set()
 
@@ -30,7 +45,8 @@ def perform_data_filtering_q1(data):
 
 def plot_tree(model, features, labels):
     """
-    Takes model, features, and labels created for ML.
+    Takes model, features, and labels created for Machine Learning
+    Model.
     Creates a DecisionTree of the model and saves it.
     """
     features = list(features.columns)
@@ -59,7 +75,8 @@ def q1_best_features(candidates, labels):
     col_names = list(candidates.columns)
     feature_names = []
 
-    # matching the result of SelectKBest to column names to identify best features
+    # matching the result of SelectKBest to column names to
+    # identify the best features and append to new list
     for f in first_row:
         col = 0
         for val in candidates.iloc[0]:
@@ -74,13 +91,15 @@ def q1_model(data):
     """
     Takes altered DataFrame.
     Makes and trains a Machine Learning Model
-    based on the best features.
+    based on the best features. The model predicts
+    if there is a presence of heart disease based on the
+    best features.
 
-    Plots a bar graph of important features and
-    plots DecisionTree.
-    Returns both plots and the accuracy scores of the model.
+    Plots a bar graph of important features of the model
+    and plots a DecisionTree.
+    Saves both plots and returns accuracy scores of the model.
     """
-    # making and training a model
+    # making and training a model with best features
     candidates = data.loc[:, data.columns != 'num']
     labels = data['num']
     feature_names = q1_best_features(candidates, labels)
@@ -114,6 +133,10 @@ def q1_model(data):
 
 
 def perform_data_filtering_q2(data):
+    """
+    Takes the original DataFrame.
+    Returns the altered DataFrame necessary for Q2.
+    """
     # redoing the dataframe columns based on different values
     df = data
     diseased = df['num'] != 0
@@ -124,52 +147,74 @@ def perform_data_filtering_q2(data):
 
 
 def q2_plot(data):
+    """
+    Takes the altered DataFrame.
 
-    fig = px.scatter(data, x='age', y='trestbps', facet_col='num', color="sex", trendline="ols")
-    #fig.show()
+    Creates a scatter linear regression plot
+    of resting blood pressure over patient ages
+    and separates them by sex.
+    Opens a new web tab with the interactive plot.
+    """
+    fig = px.scatter(data, x='age', y='trestbps', facet_col='num', color="sex",
+                     trendline="ols",
+                     title="Resting Blood Pressure over Ages per Sex")
+    fig.show()
 
 
 def perform_data_filtering_q3(data):
+    """
+    Takes the original DataFrame.
+    Returns the altered DataFrame necessary for Q3.
+    """
     df = data
     angina_presence = df['cp'] <= 2
     df['cp'] = np.where(angina_presence, 1, 0)
-    
+
     return df
 
 
-def q3(data):
-    ''' what do we want to do here? getting angina presence
-        based on factors is a classifier problem but
-        it sounds like we wanna do linear regression
-        using plotly?'''
+def q3_plot(data):
+    """
+    Takes the altered DataFrame.
 
-    correlations = data.corr().abs()
-    print(correlations)
+    Creates a bar graph of calculated correlation
+    coefficients of each heart disease attribute with
+    resting angina using Plotly.
+    Opens a new web tab with the interactive plot.
+    Same is done with exercised-induced angina.
+    """
+
+    correlations = data.corr(method='pearson').abs()
+
+    # plot for resting angina
     correlations_no_exang = correlations.drop(['exang'])
-    print(correlations_no_exang)
-    # for resting angina
-    cols = ['age', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'oldpeak', 'slope']
+    cols = ['age', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach',
+            'oldpeak', 'slope']
     correlations_no_exang['names'] = cols
-    fig = px.bar(correlations_no_exang, x='names', y='cp')
+    fig = px.bar(correlations_no_exang, x='names', y='cp',
+                 title="Correlation: Resting Angina & Attributes")
     fig.show()
-    # for exercise induced angina
+    # plot for exercise induced angina
     exercise_corr = correlations.drop(['cp'])
-    col_names = ['age', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope']
+    col_names = ['age', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach',
+                 'exang', 'oldpeak', 'slope']
     exercise_corr['names'] = col_names
-    new_fig = px.bar(exercise_corr, x='names', y='exang')
+    new_fig = px.bar(exercise_corr, x='names', y='exang',
+                     title="Correlation: Exercise-Induced Angina & Attributes")
     new_fig.show()
-    print(rest_corr)
-    print(exercise_corr)
 
 
 def main():
     data = pd.read_csv('cleveland.csv')
+    # Q1
     q1_df = perform_data_filtering_q1(data)
     q1_model(q1_df)
+    # Q2
     q2_df = perform_data_filtering_q2(data)
     q2_plot(q2_df)
+    # Q3
     q3_df = perform_data_filtering_q3(data)
-    print(q3(q3_df))
+    q3_plot(q3_df)
 
 
 if __name__ == '__main__':
