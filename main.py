@@ -26,6 +26,7 @@ from sklearn.metrics import accuracy_score
 from IPython.display import Image, display
 import graphviz
 
+
 def perform_data_filtering_q1(data):
     """
     Takes the original DataFrame.
