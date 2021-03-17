@@ -16,7 +16,6 @@
 
 import pandas as pd
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.express as px
 from sklearn.model_selection import train_test_split
@@ -26,9 +25,6 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.metrics import accuracy_score
 from IPython.display import Image, display
 import graphviz
-
-sns.set()
-
 
 def perform_data_filtering_q1(data):
     """
@@ -128,7 +124,7 @@ def q1_model(data):
     train_acc = accuracy_score(labels_train, train_prediction)
     test_prediction = model.predict(features_test)
     test_acc = accuracy_score(labels_test, test_prediction)
-
+    print('Accuracy Scores for Training and Testing are:')
     return train_acc, test_acc
 
 
@@ -208,7 +204,7 @@ def main():
     data = pd.read_csv('cleveland.csv')
     # Q1
     q1_df = perform_data_filtering_q1(data)
-    q1_model(q1_df)
+    print(q1_model(q1_df))
     # Q2
     q2_df = perform_data_filtering_q2(data)
     q2_plot(q2_df)
