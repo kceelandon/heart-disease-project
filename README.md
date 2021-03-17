@@ -8,4 +8,6 @@
 
 ### Install packages: Graphviz, scikit-learn, ipython, pandas, matplotlib, plotly, numpy
 
+### Dataset already exists in the folder: cleveland.csv
+
 ## [Link to original dataset](https://archive.ics.uci.edu/ml/datasets/Heart+Disease)
