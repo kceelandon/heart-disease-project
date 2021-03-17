@@ -2,4 +2,6 @@
 
 ### Python machine learning project on heart disease.
 
-### Analysis to be posted soon.
+### In order to produce the graphs for analysis, run `python main.py` in the command line.
+
+### To run the testing file, run `python main_test.py` in the command line.
