@@ -25,19 +25,7 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.metrics import accuracy_score
 from IPython.display import Image, display
 import graphviz
-
-
-def perform_data_filtering_q1(data):
-    """
-    Takes the original DataFrame.
-    Returns the altered DataFrame necessary for Q1.
-    """
-    df = data
-    df = df.replace('?', np.NaN)
-    df = df.dropna()
-    df['num'] = df['num'].replace([2, 3, 4], 1)
-
-    return df
+import data_filtering
 
 
 def plot_tree(model, features, labels):
@@ -129,20 +117,6 @@ def q1_model(data):
     return train_acc, test_acc
 
 
-def perform_data_filtering_q2(data):
-    """
-    Takes the original DataFrame.
-    Returns the altered DataFrame necessary for Q2.
-    """
-    # redoing the dataframe columns based on different values
-    df = data
-    diseased = df['num'] != 0
-    df['num'] = np.where(diseased, 'diseased', 'healthy')
-    males = df['sex'] == 1
-    df['sex'] = np.where(males, 'male', 'female')
-    return df
-
-
 def q2_plot(data):
     """
     Takes the altered DataFrame.
@@ -156,18 +130,6 @@ def q2_plot(data):
                      trendline="ols",
                      title="Resting Blood Pressure over Ages per Sex")
     fig.show()
-
-
-def perform_data_filtering_q3(data):
-    """
-    Takes the original DataFrame.
-    Returns the altered DataFrame necessary for Q3.
-    """
-    df = data
-    angina_presence = df['cp'] <= 2
-    df['cp'] = np.where(angina_presence, 1, 0)
-
-    return df
 
 
 def q3_plot(data):
@@ -204,13 +166,13 @@ def q3_plot(data):
 def main():
     data = pd.read_csv('cleveland.csv')
     # Q1
-    q1_df = perform_data_filtering_q1(data)
+    q1_df = data_filtering.perform_data_filtering_q1(data)
     print(q1_model(q1_df))
     # Q2
-    q2_df = perform_data_filtering_q2(data)
+    q2_df = data_filtering.perform_data_filtering_q2(data)
     q2_plot(q2_df)
     # Q3
-    q3_df = perform_data_filtering_q3(data)
+    q3_df = data_filtering.perform_data_filtering_q3(data)
     q3_plot(q3_df)
 
 
