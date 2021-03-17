@@ -6,7 +6,10 @@
 
 ### To run the testing file, run `python main_test.py` in the command line.
 
-### Install packages: Graphviz, scikit-learn, ipython, pandas, matplotlib, plotly, numpy
+### Install packages: Graphviz, ipython, scikit-learn, plotly, matplotlib, pandas, and numpy
+
+### As follows: install graphviz, pip install ipython, pip install -U scikit-learn, pip install plotly==4.14.3, 
+### pip install matplotlib, pip install pandas, pip install numpy
 
 ### Dataset already exists in the folder: cleveland.csv
 
