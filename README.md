@@ -6,4 +6,6 @@
 
 ### To run the testing file, run `python main_test.py` in the command line.
 
+### Install packages: Graphviz, scikit-learn, ipython, pandas, matplotlib, plotly, numpy
+
 ## [Link to original dataset](https://archive.ics.uci.edu/ml/datasets/Heart+Disease)
